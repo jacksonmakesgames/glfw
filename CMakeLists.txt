@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.15)
+
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 project(GLFW VERSION 3.4.0 LANGUAGES C)
-
 set(CMAKE_LEGACY_CYGWIN_WIN32 OFF)
 
 if (POLICY CMP0054)
@@ -21,8 +22,8 @@ endif()
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 option(GLFW_BUILD_EXAMPLES "Build the GLFW example programs" ${GLFW_STANDALONE})
 option(GLFW_BUILD_TESTS "Build the GLFW test programs" ${GLFW_STANDALONE})
-option(GLFW_BUILD_DOCS "Build the GLFW documentation" ON)
-option(GLFW_INSTALL "Generate installation target" ON)
+option(GLFW_BUILD_DOCS "Build the GLFW documentation" OFF)
+option(GLFW_INSTALL "Generate installation target" OFF)
 option(GLFW_VULKAN_STATIC "Assume the Vulkan loader is linked with the application" OFF)
 
 include(GNUInstallDirs)
@@ -364,4 +365,8 @@ if (GLFW_INSTALL)
         set_target_properties(uninstall PROPERTIES FOLDER "GLFW3")
     endif()
 endif()
+
+
+set_property(TARGET glfw PROPERTY
+  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 

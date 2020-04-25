@@ -1,8 +1,17 @@
 
-add_library(glfw "${GLFW_SOURCE_DIR}/include/GLFW/glfw3.h"
+add_library(glfw OBJECT
+                 "${GLFW_SOURCE_DIR}/include/GLFW/glfw3.h"
                  "${GLFW_SOURCE_DIR}/include/GLFW/glfw3native.h"
                  internal.h mappings.h context.c init.c input.c monitor.c
                  vulkan.c window.c)
+
+set_property(TARGET glfw PROPERTY
+      MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
+
+set_property(TARGET glfw PROPERTY
+  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 
 if (_GLFW_COCOA)
     target_sources(glfw PRIVATE cocoa_platform.h cocoa_joystick.h posix_thread.h
@@ -167,6 +176,12 @@ endif()
 
 if (MSVC)
     target_compile_definitions(glfw PRIVATE _CRT_SECURE_NO_WARNINGS)
+
+    set_property(TARGET glfw PROPERTY
+      MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+
 endif()
 
 if (GLFW_INSTALL)
@@ -177,3 +192,6 @@ if (GLFW_INSTALL)
             LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 endif()
 
+
+get_target_property(MSVC_RUNTIME_LIBRARY glfw property)
+message(STATUS ${property})
